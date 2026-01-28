@@ -34,6 +34,7 @@ class GitRepo:
         else:
             raise FileNotFoundError
     def start_new_csv(self):
+        if not os.path.exists('data'): os.mkdir('data')
         with open(self.PATH,'w',newline='') as file:
             Writer = csv.writer(file)
             Writer.writerow(self.fieldnames) #self.fieldnames = ['ID','Name','Path'] 
@@ -99,9 +100,7 @@ class GitRepo:
 if __name__ == '__main__':
     Gito = GitRepo()
     # print(Gito.repo_pool)
-    print(Gito.check_update('0'))
-    input('Wait.....')
-    print(Gito.check_update('0'))
+    
     # Gito.start_new_csv()
     # ID = Gito.add_repo(name='Demo OpenLP',path=r'C:\Users\shAne\AppData\Roaming\openlp\data',url='https://github.com/shaneintentionboi06/laughing-octo-umbrella.git')
     # print(Gito.repo_pool)
