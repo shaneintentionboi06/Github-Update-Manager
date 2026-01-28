@@ -1,0 +1,26 @@
+.repo{
+    /* dock:top; */
+    height: 5;
+    padding: 1;
+}
+.repo .roll{
+    dock:right;
+}
+.repo .up{
+    dock:left;
+}
+.button{
+    height: 4;
+}
+.message{
+    padding: 1;
+}
+.remove{
+    dock:right;
+    margin: 0 15;
+    /* padding: 0 30; */
+    position: relative;
+
+    /* height: 5; */
+    /* width: 1; */
+}
