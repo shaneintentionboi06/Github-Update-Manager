@@ -1,8 +1,8 @@
-from controlUI import git_app
+from controlUI import GitApp
 from gitback import GitRepo
 def main():
     print("Hello from git-update-management!")
-    git_app(Git=GitRepo()).run()
+    GitApp(Git=GitRepo()).run()
 
 
 if __name__ == "__main__":

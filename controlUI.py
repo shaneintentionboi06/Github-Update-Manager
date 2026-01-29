@@ -3,7 +3,7 @@ from textual.screen import Screen,ModalScreen
 from textual.containers import ScrollableContainer,Container,VerticalScroll
 from textual.widgets import Header,Footer,TextArea,Button,Static,Input
 
-class Git_repo(Container):
+class GitRepoContainer(Container):
     
     def compose(self):
         yield Button('Update',variant='success',classes='up button',disabled=True)
@@ -31,7 +31,7 @@ class Git_repo(Container):
         message.update(self.name)
     @on(Button.Pressed,'.remove')
     def remove_instance(self): 
-        self.app.push_screen(Delete_Screen(name=self.id))
+        self.app.push_screen(DeleteScreen(name=self.id))
     @on(Button.Pressed,'.roll')
     def rollback(self):
         ID = self.id.lstrip('I')
@@ -40,11 +40,11 @@ class Git_repo(Container):
             self.app.notify(Message)
         except Exception as err:
             self.app.notify('Error: Something Went Wrong')
-class Delete_Screen(ModalScreen): 
+class DeleteScreen(ModalScreen): 
     def compose(self):
-        yield Delete_Dialog(name=self.name)
+        yield DeleteDialog(name=self.name)
         yield Footer()
-class Delete_Dialog(Container):
+class DeleteDialog(Container):
     BINDINGS = [('escape','pop_screen','Go Back')]
     def compose(self):
         yield Static('Do You really want to remove this Repository?')
@@ -64,7 +64,7 @@ class Delete_Dialog(Container):
         self.app.pop_screen()
         self.app.notify(f'Repo Number {ID} has been Removed')
 
-class Add_Dialog(Container):
+class AddDialog(Container):
     BINDINGS = [('escape','Cancel','Go Back')]
     def compose(self):
         yield Static('Repository Details',classes='message')
@@ -84,7 +84,7 @@ class Add_Dialog(Container):
             self.app.notify('Repository added Successfully')
             Scroll = self.app.query_one('.Scroll_menu',ScrollableContainer)
             ID = 'I'+ str(ID)
-            Scroll.mount(Git_repo(id=ID,name=Name))
+            Scroll.mount(GitRepoContainer(id=ID,name=Name))
             self.app.pop_screen()
         except PermissionError as err:
             self.app.notify(f'Permission Denied: Please close {err.filename}',severity='error')
@@ -98,11 +98,11 @@ class Add_Dialog(Container):
     @on(Button.Pressed,'.Cancel')
     def action_Cancel(self):
         self.app.pop_screen()
-class Add_Screen(ModalScreen):
+class AddScreen(ModalScreen):
     def compose(self):
-        yield Add_Dialog(classes='Add Dialog')
+        yield AddDialog(classes='Add Dialog')
         
-class git_app(App):
+class GitApp(App):
     CSS_PATH='style.css'
     BINDINGS = [('a','key_a','Add Repository'),('r','key_r','Refresh Repositories')]
     
@@ -120,9 +120,9 @@ class git_app(App):
         Pool = self.Git_Connect.repo_pool
         for ID,others in Pool.items():
             sID = 'I' + ID
-            Scroll.mount(Git_repo(id=sID,name=others[0],classes='repo'))
+            Scroll.mount(GitRepoContainer(id=sID,name=others[0],classes='repo'))
     def key_a(self):
-        self.app.push_screen(Add_Screen(classes='Add TScreen'))
+        self.app.push_screen(AddScreen(classes='Add TScreen'))
     def key_r(self):
         Scroll = self.query_one('.Scroll_menu',ScrollableContainer)
         Repos = Scroll.query_children('.repo')
@@ -133,10 +133,10 @@ class git_app(App):
 class test_app(App):
     def compose(self):
         yield Header()
-        self.app.push_screen(Add_Screen())
+        self.app.push_screen(AddScreen())
         yield Footer()
 if __name__ == '__main__':
     from gitback import GitRepo,git
     Git_Connect = GitRepo()
-    git_app(Git=Git_Connect).run()
+    GitApp(Git=Git_Connect).run()
     # test_app().run()

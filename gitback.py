@@ -3,14 +3,13 @@ class GitRepo:
     def __init__(self):
         self.PATH = r'data/Repositories.csv'
         self.fieldnames = ['ID','Name','Path']
-        self.Actor = git.Actor('Isaac Paul','shane.isaacpaul@gmail.com')
         self.repo_pool,self.repo_count = self.get_repos()
     def check_update(self,ID):
         Repo = self.repo_pool[ID][1]
         Repo.index.update() 
-        if Repo.git.status().split()[6] == 'up':
-            return False
-        elif Repo.git.status().split()[6] == 'behind':
+        if Repo.head.commit.authored_date > Repo.remotes.origin.refs.master.commit.authored_date:
+            return True
+        elif Repo.head.commit.authored_date > Repo.remotes.origin.refs.master.commit.authored_date :
             return True
         else:
             return None
