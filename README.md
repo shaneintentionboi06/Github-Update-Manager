@@ -4,17 +4,17 @@ This Project attempts to sync files and folders across different computers using
 ## Getting Started
 
 0. ### Get git and auth with Github. (If not Already) 
-    refer to <a>https://git-scm.com/install/</a>
-2. ### Clone This Repository
+    refer to [Git SCM](https://git-scm.com/install/)
+1. ### Clone This Repository
     Go to the Directory where you want to store this repository and run 
     ``` git clone https://github.com/shaneintentionboi06/Github-Update-Manager.git```
 
-3. ### Install uv and sync packages
+2. ### Install uv and sync packages
     install uv (Package Manager)
 ```pip install uv ``` <br>
     sync all packages
 ```uv sync```
-4. ### Run the Program
+3. ### Run the Program
 ``` uv run main.py ```
 
 
