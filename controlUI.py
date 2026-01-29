@@ -36,8 +36,8 @@ class GitRepoContainer(Container):
     def rollback(self):
         ID = self.id.lstrip('I')
         try: 
-            Message = self.app.Git_Connect.rollback(ID)
-            self.app.notify(Message)
+            message = self.app.Git_Connect.rollback(ID)
+            self.app.notify(message)
         except Exception as err:
             self.app.notify('Error: Something Went Wrong')
 class DeleteScreen(ModalScreen): 
@@ -59,8 +59,8 @@ class DeleteDialog(Container):
     def delete_instance(self):
         self.app.Git_Connect.remove_repo(self.name.lstrip('I'))
         ID = '#' + self.name
-        Scroll = self.app.query_one('.Scroll_menu',ScrollableContainer)
-        Scroll.remove_children(ID)
+        scroll = self.app.query_one('.Scroll_menu',ScrollableContainer)
+        scroll.remove_children(ID)
         self.app.pop_screen()
         self.app.notify(f'Repo Number {ID} has been Removed')
 
@@ -76,15 +76,15 @@ class AddDialog(Container):
     
     @on(Button.Pressed,'.add')
     def submit(self):
-        Name = self.query_one('.name',Input).value
-        Path = self.query_one('.path',Input).value
-        Url = self.query_one('.url',Input).value
+        name = self.query_one('.name',Input).value
+        path = self.query_one('.path',Input).value
+        url = self.query_one('.url',Input).value
         try:
-            ID = self.app.Git_Connect.add_repo(name=Name,path=Path,url=Url)
+            ID = self.app.Git_Connect.add_repo(name=name,path=path,url=url)
             self.app.notify('Repository added Successfully')
-            Scroll = self.app.query_one('.Scroll_menu',ScrollableContainer)
+            scroll = self.app.query_one('.Scroll_menu',ScrollableContainer)
             ID = 'I'+ str(ID)
-            Scroll.mount(GitRepoContainer(id=ID,name=Name))
+            scroll.mount(GitRepoContainer(id=ID,name=name))
             self.app.pop_screen()
         except PermissionError as err:
             self.app.notify(f'Permission Denied: Please close {err.filename}',severity='error')
@@ -116,17 +116,17 @@ class GitApp(App):
         yield Footer()
         
     def on_mount(self):
-        Scroll = self.app.query_one('.Scroll_menu',ScrollableContainer)
+        scroll = self.app.query_one('.Scroll_menu',ScrollableContainer)
         Pool = self.Git_Connect.repo_pool
         for ID,others in Pool.items():
             sID = 'I' + ID
-            Scroll.mount(GitRepoContainer(id=sID,name=others[0],classes='repo'))
+            scroll.mount(GitRepoContainer(id=sID,name=others[0],classes='repo'))
     def key_a(self):
         self.app.push_screen(AddScreen(classes='Add TScreen'))
     def key_r(self):
-        Scroll = self.query_one('.Scroll_menu',ScrollableContainer)
-        Repos = Scroll.query_children('.repo')
-        for i in Repos: i.update_status()
+        scroll = self.query_one('.Scroll_menu',ScrollableContainer)
+        repos = scroll.query_children('.repo')
+        for i in repos: i.update_status()
         self.app.notify('Refreshed',severity='information')
         
     
