@@ -18,7 +18,7 @@ This Project attempts to sync files and folders across different computers using
 ``` uv run main.py ```
 
 
-# Requisites used
+# Prerequisites
     Git Python  
 <a>https://github.com/gitpython-developers/GitPython</a>
     
