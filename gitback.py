@@ -33,6 +33,7 @@ class GitRepo:
         else:
             raise FileNotFoundError
     def start_new_csv(self):
+        os.chdir(os.path.dirname(__file__))
         if not os.path.exists('data'): os.mkdir('data')
         with open(self.PATH,'w',newline='') as file:
             Writer = csv.writer(file)
@@ -92,8 +93,6 @@ class GitRepo:
         message = Repo.git.revert('HEAD')
         Repo.git.push()
         return message    
-            
-            
             
         
 if __name__ == '__main__':
